@@ -36,3 +36,21 @@ template "/etc/init/teamcity-server.conf" do
       :root_dir => node["teamcity_server"]["root_dir"]
   )
 end
+
+directory "#{node["teamcity_server"]["data_dir"]}/lib/jdbc" do
+  owner  node["teamcity_server"]["user"]
+  group  node["teamcity_server"]["group"]
+  mode "0755"
+  action :create
+end
+
+if node['teamcity_server']['server']['jdbc_driver_url']
+  basename = node['teamcity_server']['server']['jdbc_driver_url'].split('/').last
+  jdbc_path = "#{node["teamcity_server"]["data_dir"]}/lib/jdbc/#{basename}"
+
+  remote_file jdbc_path do
+    source node['teamcity_server']['server']['jdbc_driver_url']
+    action :create_if_missing
+    only_if {node['teamcity_server']['server']['jdbc_driver_url']}
+  end
+end
