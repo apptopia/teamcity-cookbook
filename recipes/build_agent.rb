@@ -1,19 +1,5 @@
 include_recipe "teamcity::common"
 
-unless Chef::Config[:solo]
-  unless node["teamcity_server"]["build_agent"]["server"]
-    server_node = search(:node, node["teamcity_server"]["build_agent"]["search_query"]).first
-
-    if server_node
-      node.default["teamcity_server"]["build_agent"]["server"] = server_node["ipaddress"]
-    end
-  end
-end
-
-if node["teamcity_server"]["build_agent"]["server"].nil?
-  node.default["teamcity_server"]["build_agent"]["server"] = node["ipaddress"]
-end
-
 # Create agents directory
 directory "#{node["teamcity_server"]["root_dir"]}/agents" do
   user  node["teamcity_server"]["user"]
@@ -34,13 +20,8 @@ port = 9090
 agents.each do |agent, p|
   properties          = agent_defaults.merge(p)
   properties_file     = "#{node["teamcity_server"]["root_dir"]}/agents/#{agent}/conf/buildAgent.properties"
-  server              = properties["server"]
   own_address         = node["ipaddress"]
   authorization_token = nil
-
-  if server == own_address
-    server = own_address = "127.0.0.1"
-  end
 
   if File.exists?(properties_file)
     lines = File.readlines(properties_file).grep(/^authorizationToken=/)
@@ -72,7 +53,7 @@ agents.each do |agent, p|
     owner  node["teamcity_server"]["user"]
     group  node["teamcity_server"]["group"]
     variables(
-      :server_url          => properties["server_url"] || "http://#{server}:#{node["teamcity_server"]["server"]["port"]}/",
+      :server_url          => properties["server_url"] || node["teamcity_server"]["server_url"],
       :name                => properties["name"] || agent,
       :own_address         => own_address,
       :port                => properties["port"] || port,
