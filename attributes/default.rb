@@ -1,9 +1,11 @@
 default["teamcity_server"]["version"]                           = "9.0.3"
 default["teamcity_server"]["base_url"]                          = "http://download.jetbrains.com/teamcity/"
 default["teamcity_server"]["build_agent"]["server"]             = nil
+default["teamcity_server"]["build_agent"]["blank_properties"]   = false
 default["teamcity_server"]["build_agent"]["name"]               = nil
 default["teamcity_server"]["build_agent"]["search_query"]       = "role\:teamcity_server"
 default["teamcity_server"]["build_agent"]["server_url"]         = nil
+default["teamcity_server"]["build_agent"]["rbenv_root"]         = nil
 default["teamcity_server"]["server"]["address"]                 = "0.0.0.0"
 default["teamcity_server"]["server"]["port"]                    = 8111
 default["teamcity_server"]["root_dir"]                          = "/opt/TeamCity"

@@ -9,7 +9,9 @@ serverUrl=<%= @server_url %>
 
 ## The unique name of the agent used to identify this agent on the TeamCity server
 ## Use blank name to let server generate it. By default, this name would be created from the build agent's host name
+<% unless @blank_properties -%>
 name=<%= @name %>
+<% end -%>
 
 ## Container directory to create default checkout directories for the build configurations.
 workDir=../work
@@ -29,7 +31,9 @@ systemDir=../system
 ## The IP address which will be used by TeamCity server to connect to the build agent.
 ## If not specified, it is detected by build agent automatically,
 ## but if the machine has several network interfaces, automatic detection may fail.
+<% unless @blank_properties -%>
 ownAddress=<%= @own_address %>
+<% end -%>
 
 ## Optional
 ## A port that TeamCity server will use to connect to the agent.
@@ -39,8 +43,9 @@ ownPort=<%= @port %>
 
 ## A token which is used to identify this agent on the TeamCity server.
 ## It is automatically generated and saved on the first agent connection to the server.
+<% unless @blank_properties -%>
 authorizationToken=<%= @authorization_token %>
-
+<% end -%>
 
 ######################################
 #   Default Build Properties         #
